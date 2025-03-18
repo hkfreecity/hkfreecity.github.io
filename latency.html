@@ -1,30 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Availability Checker</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        pre {
-            text-align: left;
-            background: #f4f4f4;
-            padding: 10px;
-            border-radius: 5px;
-            display: block;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-    </style>
-</head>
-<body>
-
-    <h3>Website Availability Checker</h3>
-    <pre id="result">{ "status": "Waiting for URL..." }</pre>
-
     <script>
         // Function to get URL parameters
         function getQueryParam(param) {
@@ -34,7 +10,6 @@
 
         // Function to check website availability
         async function checkWebsite(url) {
-            const resultDiv = document.getElementById('result');
             const startTime = performance.now(); // Start time for measuring response time
 
             try {
@@ -49,7 +24,7 @@
                     responseTime: `${responseTime} ms`
                 };
 
-                resultDiv.textContent = JSON.stringify(resultJson, null, 2);
+                document.body.innerText = JSON.stringify(resultJson, null, 2);
             } catch (error) {
                 const endTime = performance.now();
                 const responseTime = (endTime - startTime).toFixed(2);
@@ -61,22 +36,22 @@
                     responseTime: `${responseTime} ms`
                 };
 
-                resultDiv.textContent = JSON.stringify(errorJson, null, 2);
+                document.body.innerText = JSON.stringify(errorJson, null, 2);
             }
         }
 
-        // Auto-run if URL is provided in query string
+        // Run immediately if URL is provided in query string
         window.onload = function () {
             const queryUrl = getQueryParam('websiteUrl');
             if (queryUrl) {
                 checkWebsite(queryUrl);
             } else {
-                document.getElementById('result').textContent = JSON.stringify(
+                document.body.innerText = JSON.stringify(
                     { error: "No websiteUrl provided in query string." }, null, 2
                 );
             }
         };
     </script>
-
-</body>
+</head>
+<body></body>
 </html>
