@@ -12,6 +12,9 @@
         async function checkWebsite(url) {
             const startTime = performance.now(); // Start time for measuring response time
 
+            // Get current date and time for processing
+            const processingDateTime = new Date().toISOString();
+
             try {
                 const response = await fetch(url, { method: 'GET' });
                 const endTime = performance.now(); // End time for measuring response time
@@ -21,9 +24,11 @@
                     url: url,
                     status: response.status,
                     statusText: response.statusText,
-                    responseTime: `${responseTime} ms`
+                    responseTime: `${responseTime} ms`,
+                    processingDateTime: processingDateTime
                 };
 
+                // Display the JSON response
                 document.body.innerText = JSON.stringify(resultJson, null, 2);
             } catch (error) {
                 const endTime = performance.now();
@@ -33,9 +38,11 @@
                     url: url,
                     status: "Failed",
                     error: error.message,
-                    responseTime: `${responseTime} ms`
+                    responseTime: `${responseTime} ms`,
+                    processingDateTime: processingDateTime
                 };
 
+                // Display the error JSON response
                 document.body.innerText = JSON.stringify(errorJson, null, 2);
             }
         }
