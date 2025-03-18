@@ -35,8 +35,15 @@
     <pre id="result">{}</pre>
 
     <script>
-        async function checkWebsite() {
-            const urlInput = document.getElementById('websiteUrl').value;
+        // Function to get URL parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Function to check website availability
+        async function checkWebsite(url = null) {
+            const urlInput = url || document.getElementById('websiteUrl').value;
             const resultDiv = document.getElementById('result');
 
             if (!urlInput) {
@@ -73,6 +80,15 @@
                 resultDiv.textContent = JSON.stringify(errorJson, null, 2);
             }
         }
+
+        // Auto-check if URL is provided in query string
+        window.onload = function () {
+            const queryUrl = getQueryParam('websiteUrl');
+            if (queryUrl) {
+                document.getElementById('websiteUrl').value = queryUrl;
+                checkWebsite(queryUrl);
+            }
+        };
     </script>
 
 </body>
