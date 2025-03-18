@@ -7,32 +7,23 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             padding: 20px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
         }
         pre {
             text-align: left;
             background: #f4f4f4;
             padding: 10px;
             border-radius: 5px;
-            display: inline-block;
-            max-width: 80%;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
 
-    <h2>Website Availability Checker</h2>
-    
-    <input type="text" id="websiteUrl" placeholder="Enter website URL (e.g., https://example.com)">
-    <button onclick="checkWebsite()">Check Availability</button>
-
-    <h3>Result:</h3>
-    <pre id="result">{}</pre>
+    <h3>Website Availability Checker</h3>
+    <pre id="result">{ "status": "Waiting for URL..." }</pre>
 
     <script>
         // Function to get URL parameters
@@ -42,24 +33,17 @@
         }
 
         // Function to check website availability
-        async function checkWebsite(url = null) {
-            const urlInput = url || document.getElementById('websiteUrl').value;
+        async function checkWebsite(url) {
             const resultDiv = document.getElementById('result');
-
-            if (!urlInput) {
-                resultDiv.textContent = JSON.stringify({ error: "Please enter a website URL." }, null, 2);
-                return;
-            }
-
             const startTime = performance.now(); // Start time for measuring response time
 
             try {
-                const response = await fetch(urlInput, { method: 'GET' });
+                const response = await fetch(url, { method: 'GET' });
                 const endTime = performance.now(); // End time for measuring response time
                 const responseTime = (endTime - startTime).toFixed(2); // Calculate response time
 
                 const resultJson = {
-                    url: urlInput,
+                    url: url,
                     status: response.status,
                     statusText: response.statusText,
                     responseTime: `${responseTime} ms`
@@ -71,7 +55,7 @@
                 const responseTime = (endTime - startTime).toFixed(2);
 
                 const errorJson = {
-                    url: urlInput,
+                    url: url,
                     status: "Failed",
                     error: error.message,
                     responseTime: `${responseTime} ms`
@@ -81,12 +65,15 @@
             }
         }
 
-        // Auto-check if URL is provided in query string
+        // Auto-run if URL is provided in query string
         window.onload = function () {
             const queryUrl = getQueryParam('websiteUrl');
             if (queryUrl) {
-                document.getElementById('websiteUrl').value = queryUrl;
                 checkWebsite(queryUrl);
+            } else {
+                document.getElementById('result').textContent = JSON.stringify(
+                    { error: "No websiteUrl provided in query string." }, null, 2
+                );
             }
         };
     </script>
