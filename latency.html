@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Availability Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+        pre {
+            text-align: left;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            max-width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Website Availability Checker</h2>
+    
+    <input type="text" id="websiteUrl" placeholder="Enter website URL (e.g., https://example.com)">
+    <button onclick="checkWebsite()">Check Availability</button>
+
+    <h3>Result:</h3>
+    <pre id="result">{}</pre>
+
+    <script>
+        async function checkWebsite() {
+            const urlInput = document.getElementById('websiteUrl').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!urlInput) {
+                resultDiv.textContent = JSON.stringify({ error: "Please enter a website URL." }, null, 2);
+                return;
+            }
+
+            const startTime = performance.now(); // Start time for measuring response time
+
+            try {
+                const response = await fetch(urlInput, { method: 'GET' });
+                const endTime = performance.now(); // End time for measuring response time
+                const responseTime = (endTime - startTime).toFixed(2); // Calculate response time
+
+                const resultJson = {
+                    url: urlInput,
+                    status: response.status,
+                    statusText: response.statusText,
+                    responseTime: `${responseTime} ms`
+                };
+
+                resultDiv.textContent = JSON.stringify(resultJson, null, 2);
+            } catch (error) {
+                const endTime = performance.now();
+                const responseTime = (endTime - startTime).toFixed(2);
+
+                const errorJson = {
+                    url: urlInput,
+                    status: "Failed",
+                    error: error.message,
+                    responseTime: `${responseTime} ms`
+                };
+
+                resultDiv.textContent = JSON.stringify(errorJson, null, 2);
+            }
+        }
+    </script>
+
+</body>
+</html>
