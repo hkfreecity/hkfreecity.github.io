@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Copy IP to Clipboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: #f5f5f5;
+    }
+    #copyIp {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    #copyIp:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="copyIp">Copy My IP to Clipboard</button>
+
+  <script>
+    document.getElementById('copyIp').addEventListener('click', async () => {
+      const btn = document.getElementById('copyIp');
+      btn.disabled = true;
+      btn.textContent = 'Fetching IP…';
+
+      try {
+        // Fetch the client's public IP
+        const resp = await fetch('https://api.ipify.org?format=json');
+        if (!resp.ok) throw new Error('Network response was not ok');
+        const data = await resp.json();
+        const ip = data.ip;
+
+        // Copy to clipboard
+        await navigator.clipboard.writeText(ip);
+
+        btn.textContent = `Copied: ${ip}`;
+      } catch (err) {
+        console.error(err);
+        btn.textContent = 'Error fetching IP';
+      } finally {
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = 'Copy My IP to Clipboard';
+        }, 3000);
+      }
+    });
+  </script>
+
+</body>
+</html>
