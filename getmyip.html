@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto-Copy IP to Clipboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: #f5f5f5;
+      margin: 0;
+    }
+    #status {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border-radius: 4px;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .error {
+      color: #c00;
+    }
+    .success {
+      color: #090;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="status">Initializing…</div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      const status = document.getElementById('status');
+      status.textContent = 'Fetching IP…';
+
+      try {
+        // 1) Fetch public IP
+        const resp = await fetch('https://api.ipify.org?format=json');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const { ip } = await resp.json();
+
+        // 2) Write to clipboard
+        await navigator.clipboard.writeText(ip);
+
+        // 3) Success feedback
+        status.textContent = `Your IP (${ip}) has been copied to clipboard!`;
+        status.classList.add('success');
+      } catch (err) {
+        console.error(err);
+        status.textContent = '❌ Unable to copy IP.';
+        status.classList.add('error');
+      }
+    });
+  </script>
+
+</body>
+</html>
