@@ -45,8 +45,8 @@
 </head>
 <body>
 
-  <div id="status">Initializing…</div>
-  <button id="closeBtn">Close Window</button>
+  <div id="status">正在初始化…</div>
+  <button id="closeBtn">關閉視窗</button>
 
   <script>
     window.addEventListener('DOMContentLoaded', async () => {
@@ -65,11 +65,11 @@
         await navigator.clipboard.writeText(ip);
 
         // 3) Success feedback
-        status.textContent = `Your IP (${ip}) has been copied to clipboard!`;
+        status.textContent = `您的 IP (${ip}) 已複製到剪貼簿！`;
         status.classList.add('success');
       } catch (err) {
         console.error(err);
-        status.textContent = '❌ Unable to copy IP.';
+        status.textContent = '❌ 無法複製IP，請重新開啟頁面.';
         status.classList.add('error');
       }
 
